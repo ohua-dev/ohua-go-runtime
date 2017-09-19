@@ -2,11 +2,25 @@ package backend
 
 import "go/types"
 
-type Df_graph struct {
-	// TODO
+type callableSfn struct{
+	f func(args ... types.Object) // FIXME it must be something that we can call
+	id int
 }
 
-func (graph Df_graph) exec() types.Object {
-	// TODO call the generated code here and
+type linkedDep struct{
+	source *sfn
+	sourceIdx int
+	target *sfn
+	targetIdx int
+}
+
+type RuntimeGraph struct {
+	sfns []callableSfn
+	deps []linkedDep
+}
+
+func (graph RuntimeGraph) Exec() types.Object {
+	// TODO execute the graph here: build the operators, arcs and goroutines
+
 	return nil
 }
