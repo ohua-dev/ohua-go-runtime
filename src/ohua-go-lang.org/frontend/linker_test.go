@@ -37,6 +37,7 @@ func Link(p string, fn_name string){
 	}
 
 	// THERE IS NO SUCH THING AS Class.forName in Go!
+	// https://groups.google.com/forum/#!topic/golang-nuts/kTyvvFe8Bd8
 
 	// but we find the (stateful) function
 	var t types.Object

@@ -1,26 +1,48 @@
 package backend
 
-import "go/types"
+import (
+	"reflect"
+)
 
-type callableSfn struct{
-	f func(args ... types.Object) // FIXME it must be something that we can call
+type CallableSfn struct{
+	t interface{}
+	sfn string
 	id int
 }
 
-type linkedDep struct{
-	source *sfn
+type LinkedDep struct{
+	source int
 	sourceIdx int
-	target *sfn
+	target int
 	targetIdx int
 }
 
 type RuntimeGraph struct {
-	sfns []callableSfn
-	deps []linkedDep
+	sfns []CallableSfn
+	deps []LinkedDep
 }
 
-func (graph RuntimeGraph) Exec() types.Object {
+//type myType struct {
+//	s int
+//}
+//
+//func (m myType) myFunc(b int) {
+//	m.s = b
+//}
+
+func (graph RuntimeGraph) Exec() interface{} {
 	// TODO execute the graph here: build the operators, arcs and goroutines
 
+	// create lambdas for each of the stateful functions and store them somewhere
+	f := func(args ... interface{}) interface{} {
+		// FIXME instead of casting back and forth we might leave the values just as they are and deal only with reflected values.
+		var reflected_args []reflect.Value
+		for _, arg := range args {
+			reflected_args = append(reflected_args, reflect.ValueOf(arg))
+		}
+		// assumes only a single return result
+		result := reflect.ValueOf(graph.sfns[0].t).MethodByName(graph.sfns[0].sfn).Call(reflected_args)
+		return result[0].Interface()
+	}
 	return nil
 }

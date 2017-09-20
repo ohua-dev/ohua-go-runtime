@@ -7,10 +7,16 @@ import (
 )
 
 func Exists(pkg_name string, fn_name string) bool {
+	var result types.Object
+	result = Find(pkg_name, fn_name)
+	if result != nil { return true } else { return false }
+}
+
+func Find(pkg_name string, fn_name string) types.Object {
 	pkg, err := importer.Default().Import(pkg_name)
 	if err != nil {
 		fmt.Printf("error: %s\n", err.Error())
-		return false
+		return nil
 	}else{
 		for _, declName := range pkg.Scope().Names() {
 			var t types.Object
@@ -22,9 +28,9 @@ func Exists(pkg_name string, fn_name string) bool {
 			if obj == nil {
 				// continue
 			} else {
-				return true
+				return obj
 			}
 		}
 	}
-	return false
+	return nil
 }
